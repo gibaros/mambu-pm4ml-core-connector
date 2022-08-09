@@ -28,7 +28,13 @@ camel:
 #  username: user
 #  password: pass
 
+dfsp:
+  host: https://modusbox.sandbox.mambu.com/api
+  username: 
+  password: 
+  name: MBX FINANCE
+
 ### properties for Mojaloop Connector connection
-#ml-conn:
-#  outbound:
-#    host:  http://localhost:3004
+ml-conn:
+  outbound:
+    host:  http://localhost:3004
