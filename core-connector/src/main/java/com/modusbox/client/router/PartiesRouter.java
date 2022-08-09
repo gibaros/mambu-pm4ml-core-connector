@@ -57,10 +57,28 @@ public class PartiesRouter extends RouteBuilder {
 						"'Tracking the request', " +
 						"'Call the Mambu API,  Track the response', " +
 						"'Input Payload: ${body}')") // default logger
+						        
+				.process(exchange -> System.out.println())
+			
 				/*
 				 * BEGIN processing
 				 */
-				.process(idSubValueChecker)
+			        .setHeader("idValueTrimmed", simple("${header.idValue}"))
+				.to("direct:getClientById")
+				.marshal().json()
+				.transform(datasonnet("resource:classpath:mappings/getPartiesResponse.ds"))
+				.setBody(simple("${body.content}"))
+
+				/*
+				 * END processing
+				 */
+				.to("bean:customJsonMessage?method=logJsonMessage(" +
+						"'info', " +
+						"${header.X-CorrelationId}, " +
+						"'Response for GET /parties/${header.idType}/${header.idValue}', " +
+						"'Tracking the response', " +
+						"null, " +
+						"'Output Payload: ${body}')") // default logger
 
 				.doCatch(CCCustomException.class,SocketException.class)
 					.to("direct:extractCustomErrors")
